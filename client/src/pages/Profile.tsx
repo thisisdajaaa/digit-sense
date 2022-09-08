@@ -8,9 +8,8 @@ import React, {
 import UploadIcon from "@mui/icons-material/Upload";
 import { Avatar, Box, Button, Grid, Link, Typography } from "@mui/material";
 import { Layout } from "../components/Layout";
-import * as API from "../api/Api";
-import { User, UserResponse } from "../types";
-import { uploadAvatar } from "../services";
+import { User } from "../types";
+import { getCurrentUser, uploadAvatar } from "../services";
 
 const ProfileScreen = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -20,9 +19,9 @@ const ProfileScreen = () => {
 
   const handleFetchLoggedInUser = useCallback(async () => {
     try {
-      const response = (await API.get("auth/currentUser")) as UserResponse;
+      const { success, data } = await getCurrentUser();
 
-      if (response.success) setUser(response.data);
+      if (success) setUser(data);
     } catch (error) {
       console.log(error);
     }
