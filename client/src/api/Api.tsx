@@ -39,7 +39,7 @@ const handleResponse = async (response: any) => {
   });
 };
 
-const jsonHeader = {
+const headerConfig = {
   "Content-Type": "application/json",
 };
 
@@ -49,7 +49,7 @@ const makeCall = async (
   { params = {}, payload, files }: CallConfig
 ) => {
   let url = getUrl(endpoint);
-  let headers: any = files ? {} : jsonHeader;
+  let headers: any = files ? {} : headerConfig;
   const accessToken = localStorage.getItem("accessToken");
 
   if (accessToken || isLoggedIn())
@@ -58,6 +58,7 @@ const makeCall = async (
   let fetchConfig: RequestInit = {
     method,
     headers,
+    credentials: "include",
     body: null,
   };
 

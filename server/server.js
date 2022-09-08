@@ -44,7 +44,12 @@ app.use(helmet());
 
 app.use(xss());
 
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
 
 const limiter = rateLimit({
   windowMs: 10 * 60 * 1000,

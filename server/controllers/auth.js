@@ -86,7 +86,7 @@ exports.updateDetails = asyncHandler(async (req, res, next) => {
   });
 });
 
-// @desc    Upload photo for bootcamp
+// @desc    Upload photo for user
 // @route   PUT /api/v1/auth/uploadAvatar
 // @access  Private
 exports.uploadAvatar = asyncHandler(async (req, res, next) => {
