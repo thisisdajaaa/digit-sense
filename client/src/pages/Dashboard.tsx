@@ -10,6 +10,7 @@ import {
   TableCell,
   TableContainer,
   TableFooter,
+  TableHead,
   TablePagination,
   TableRow,
 } from "@mui/material";
@@ -88,6 +89,16 @@ const DashboardScreen = () => {
 
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
+            <TableHead>
+              <TableRow>
+                <TableCell align="left">User ID</TableCell>
+                <TableCell align="left">Email</TableCell>
+                <TableCell align="left">Full Name</TableCell>
+                <TableCell align="left">Address</TableCell>
+                <TableCell align="left">Age</TableCell>
+                <TableCell align="center">Actions</TableCell>
+              </TableRow>
+            </TableHead>
             <TableBody>
               {users.map((row) => (
                 <TableRow key={row.name}>
