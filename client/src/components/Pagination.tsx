@@ -2,16 +2,7 @@ import React from "react";
 import { Box, IconButton, useTheme } from "@mui/material";
 import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
-
-type PaginationProps = {
-  count: number;
-  page: number;
-  rowsPerPage: number;
-  onPageChange: (
-    event: React.MouseEvent<HTMLButtonElement>,
-    newPage: number
-  ) => void;
-};
+import { PaginationProps } from "../types";
 
 const Pagination = ({
   count,
@@ -61,4 +52,4 @@ const Pagination = ({
   );
 };
 
-export default Pagination;
+export { Pagination };

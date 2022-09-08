@@ -17,32 +17,9 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import { Layout } from "../components/Layout";
-import * as API from "../api/Api";
-import Pagination from "../components/Pagination";
-
-type User = {
-  _id: string;
-  name: string;
-  email: string;
-  address: string;
-  age: number;
-  avatar?: string;
-  createdAt: string;
-  __v: number;
-};
-
-type UsersResponse = {
-  success: boolean;
-  count: number;
-  totalCount: number;
-  pagination: any;
-  data: User[];
-};
-
-type DeleteResponse = {
-  success: boolean;
-  data: object;
-};
+import { Pagination } from "../components/Pagination";
+import { User } from "../types";
+import { deleteUser, getAllUsers } from "../services";
 
 const DashboardScreen = () => {
   const [users, setUsers] = useState<User[]>([]);
@@ -53,12 +30,13 @@ const DashboardScreen = () => {
 
   const handleFetchUsers = useCallback(async () => {
     try {
-      const response = (await API.get(
-        `users?page=${activePage === 0 ? 1 : activePage + 1}&limit=5`
-      )) as UsersResponse;
+      const currentPage = activePage === 0 ? 1 : activePage + 1;
+      const { data, totalCount, success } = await getAllUsers(currentPage);
 
-      setUsers(response.data);
-      setTotalCount(response.totalCount);
+      if (success) {
+        setUsers(data);
+        setTotalCount(totalCount);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -68,16 +46,20 @@ const DashboardScreen = () => {
     handleFetchUsers();
   }, [handleFetchUsers]);
 
-  const handleEditUser = (id: string) => navigate(`/user/${id}`);
+  const handleEditUser = (id?: string) => {
+    if (!id) return;
+
+    navigate(`/user/${id}`);
+  };
   const handleCreateUser = () => navigate("/create-user");
 
-  const handleDeleteUser = async (id: string) => {
-    try {
-      const response = (await API.deleteRequest(
-        `users/${id}`
-      )) as DeleteResponse;
+  const handleDeleteUser = async (id?: string) => {
+    if (!id) return;
 
-      if (response.success) handleFetchUsers();
+    try {
+      const { success } = await deleteUser(id);
+
+      if (success) handleFetchUsers();
     } catch (error) {
       console.log(error);
     }
@@ -110,18 +92,10 @@ const DashboardScreen = () => {
               {users.map((row) => (
                 <TableRow key={row.name}>
                   <TableCell align="left">{row._id}</TableCell>
-                  <TableCell style={{ width: 140 }} align="left">
-                    {row.email}
-                  </TableCell>
-                  <TableCell style={{ width: 140 }} align="left">
-                    {row.name}
-                  </TableCell>
-                  <TableCell style={{ width: 140 }} align="left">
-                    {row.address}
-                  </TableCell>
-                  <TableCell style={{ width: 140 }} align="left">
-                    {row.age}
-                  </TableCell>
+                  <TableCell align="left">{row.email}</TableCell>
+                  <TableCell align="left">{row.name}</TableCell>
+                  <TableCell align="left">{row.address}</TableCell>
+                  <TableCell align="left">{row.age}</TableCell>
                   <TableCell>
                     <Stack direction="row" spacing={2}>
                       <Button

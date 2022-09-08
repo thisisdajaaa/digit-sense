@@ -1,10 +1,9 @@
 import React, { FC, PropsWithChildren } from "react";
 import { Container } from "@mui/material";
-import { Header, HeaderProps } from "./Header";
+import { Header } from "./Header";
+import { HeaderProps } from "../types";
 
-type LayoutProps = HeaderProps;
-
-const Layout: FC<PropsWithChildren<LayoutProps>> = ({
+const Layout: FC<PropsWithChildren<HeaderProps>> = ({
   pageTitle,
   children,
 }) => {

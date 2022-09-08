@@ -9,34 +9,14 @@ import UploadIcon from "@mui/icons-material/Upload";
 import { Avatar, Box, Button, Grid, Link, Typography } from "@mui/material";
 import { Layout } from "../components/Layout";
 import * as API from "../api/Api";
-
-type User = {
-  _id?: string;
-  name?: string;
-  email?: string;
-  address?: string;
-  age?: number;
-  avatar?: string;
-  createdAt?: string;
-  __v?: number;
-};
-
-type UserResponse = {
-  success: boolean;
-  data: User;
-};
+import { User, UserResponse } from "../types";
+import { uploadAvatar } from "../services";
 
 const ProfileScreen = () => {
   const [user, setUser] = useState<User | null>(null);
   const inputFileRef = useRef<HTMLInputElement>(null);
 
-  /**
-   *
-   * @param {React.MouseEvent<HTMLButtonElement, MouseEvent>} event
-   */
-  const handleClick = (event: any) => {
-    inputFileRef.current?.click();
-  };
+  const handleClick = () => inputFileRef.current?.click();
 
   const handleFetchLoggedInUser = useCallback(async () => {
     try {
@@ -53,14 +33,17 @@ const ProfileScreen = () => {
   }, [handleFetchLoggedInUser]);
 
   const handleOnChange = useCallback(
-    async (event: any) => {
-      const newImage = event.target?.files;
+    async (event: React.ChangeEvent<HTMLInputElement>) => {
+      const newImages = event.target?.files;
 
-      console.log(newImage);
+      if (newImages) {
+        try {
+          const { success } = await uploadAvatar(newImages);
 
-      if (newImage) {
-        await API.upload("auth/uploadAvatar", newImage);
-        handleFetchLoggedInUser();
+          if (success) handleFetchLoggedInUser();
+        } catch (error) {
+          console.log(error);
+        }
       }
     },
     [handleFetchLoggedInUser]

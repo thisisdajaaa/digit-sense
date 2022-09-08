@@ -1,20 +1,20 @@
 import React from "react";
 import { AppBar, Button, Toolbar, Typography } from "@mui/material";
-import * as API from "../api/Api";
 import { useNavigate } from "react-router-dom";
-
-export type HeaderProps = {
-  pageTitle: string;
-};
+import { logout } from "../services";
+import { HeaderProps } from "../types";
 
 const Header = ({ pageTitle }: HeaderProps) => {
   const navigate = useNavigate();
 
   const handleLogout = async () => {
     try {
-      await API.get("auth/logout");
-      localStorage.removeItem("accessToken");
-      navigate("/login");
+      const { success } = await logout();
+
+      if (success) {
+        localStorage.removeItem("accessToken");
+        navigate("/login");
+      }
     } catch (error) {
       console.log(error);
     }

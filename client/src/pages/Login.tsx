@@ -1,20 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Container, Box, Typography, TextField, Button } from "@mui/material";
-import * as API from "../api/Api";
-
-type FormValues = {
-  email: string;
-  password: "";
-};
-
-type LoginResponse = {
-  success: boolean;
-  token: string;
-};
+import { LoginFormValues } from "../types";
+import { loginUser } from "../services";
 
 const LoginScreen = () => {
-  const [formValues, setFormValues] = useState<FormValues>({
+  const [formValues, setFormValues] = useState<LoginFormValues>({
     email: "",
     password: "",
   });
@@ -22,7 +13,8 @@ const LoginScreen = () => {
   const navigate = useNavigate();
 
   const handleChange =
-    (key: keyof FormValues) => (event: React.ChangeEvent<HTMLInputElement>) => {
+    (key: keyof LoginFormValues) =>
+    (event: React.ChangeEvent<HTMLInputElement>) => {
       setFormValues((prev) => ({
         ...prev,
         [key]: event.target.value,
@@ -33,14 +25,11 @@ const LoginScreen = () => {
     event.preventDefault();
 
     try {
-      const response = (await API.post(
-        "auth/login",
-        formValues
-      )) as LoginResponse;
+      const { token, success } = await loginUser(formValues);
 
-      localStorage.setItem("accessToken", response.token);
+      localStorage.setItem("accessToken", token);
 
-      if (response.success) navigate("/");
+      if (success) navigate("/");
     } catch (error) {
       console.log(error);
     }

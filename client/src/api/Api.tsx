@@ -1,3 +1,4 @@
+import { CallConfig } from "../types";
 import { isLoggedIn } from "../utils/CommonHelper";
 
 const API_URL = process.env.REACT_APP_API_URL;
@@ -14,7 +15,7 @@ export const put = (endpoint: string, payload: any, params = {}) => {
   return makeCall("PUT", endpoint, { params, payload });
 };
 
-export const upload = (endpoint: string, files: any[]) => {
+export const upload = (endpoint: string, files: FileList) => {
   return makeCall("PUT", endpoint, { files });
 };
 
@@ -42,12 +43,6 @@ const jsonHeader = {
   "Content-Type": "application/json",
 };
 
-type CallConfig = {
-  params?: any;
-  payload?: any;
-  files?: any[];
-};
-
 const makeCall = async (
   method: string,
   endpoint: string,
@@ -68,7 +63,7 @@ const makeCall = async (
 
   if (files) {
     const data = new FormData();
-    for (const file of files) {
+    for (const file of Array.from(files)) {
       data.append("file", file);
     }
 
