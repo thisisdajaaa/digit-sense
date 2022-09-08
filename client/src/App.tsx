@@ -1,26 +1,60 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { Routes, BrowserRouter as Router, Route } from "react-router-dom";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
+import { PrivateRoute } from "./utils/RouteHelper";
+import { LoginScreen } from "./pages/Login";
+import { DashboardScreen } from "./pages/Dashboard";
+import { CreateUserScreen } from "./pages/CreateUser";
+import { EditUserScreen } from "./pages/EditUser";
+import { ProfileScreen } from "./pages/Profile";
 
-function App() {
+const App = () => {
+  const theme = createTheme();
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+
+      <Router>
+        <Routes>
+          <Route path="/login" element={<LoginScreen />} />
+          <Route
+            path="/"
+            element={
+              <PrivateRoute>
+                <DashboardScreen />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <PrivateRoute>
+                <ProfileScreen />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/create-user"
+            element={
+              <PrivateRoute>
+                <CreateUserScreen />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/user/:id"
+            element={
+              <PrivateRoute>
+                <EditUserScreen />
+              </PrivateRoute>
+            }
+          />
+        </Routes>
+      </Router>
+    </ThemeProvider>
   );
-}
+};
 
 export default App;
